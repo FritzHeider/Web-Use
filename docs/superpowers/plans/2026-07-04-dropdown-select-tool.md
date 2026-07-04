@@ -35,7 +35,7 @@
 - Consumes: `menu_tool` (existing `Tool` instance defined in `src/agent/tools/service.py`).
 - Produces: `menu_tool` present in `src.agent.tools.BUILTIN_TOOLS` — the agent (`src/agent/service.py:52`) picks it up automatically. The test file `tests/test_menu_tool.py` created here is extended by Tasks 2–4.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `tests/test_menu_tool.py` with exactly:
 
@@ -54,12 +54,12 @@ def test_menu_tool_registered():
     assert menu_tool in BUILTIN_TOOLS
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `uv run pytest tests/test_menu_tool.py::test_menu_tool_registered -v`
 Expected: FAIL with `AssertionError` (menu_tool is imported in `__init__.py` but absent from the `BUILTIN_TOOLS` list).
 
-- [ ] **Step 3: Add `menu_tool` to the registration list**
+- [x] **Step 3: Add `menu_tool` to the registration list**
 
 In `src/agent/tools/__init__.py`, change the `BUILTIN_TOOLS` list (currently lines 20–25) from:
 
@@ -85,12 +85,12 @@ BUILTIN_TOOLS = [
 
 Do not change the import block or `upload_tool`/`human_tool` handling.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `uv run pytest tests/test_menu_tool.py::test_menu_tool_registered -v`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/test_menu_tool.py src/agent/tools/__init__.py docs/superpowers/plans/2026-07-04-dropdown-select-tool.md
