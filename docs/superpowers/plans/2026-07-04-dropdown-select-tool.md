@@ -212,7 +212,7 @@ git commit -m "feat: return structured result from select_option instead of sile
 - Consumes: `Browser.select_option(xpath, labels) -> dict` with the three result shapes from Task 2; `Browser.get_element_by_index(index)` returning an element whose `.xpath` is a dict with key `'element'`.
 - Produces: `menu_tool` returns `"Selected <labels> in element at label <N>"` on full success and raises `Exception` with actionable text otherwise. Raising is load-bearing: `Registry.aexecute` (`src/agent/registry/service.py:153-164`) converts it to `ToolResult(is_success=False, error=...)`, which is what the agent loop sees.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/test_menu_tool.py`:
 
@@ -258,12 +258,12 @@ def test_menu_tool_raises_on_element_not_found():
 
 (The mismatch test deliberately uses a curly apostrophe `’` in `available` vs a straight `'` in the request — the exact self-correction scenario from the spec.)
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_menu_tool.py -v`
 Expected: previous 4 tests PASS; `test_menu_tool_success_message` PASSES incidentally (current code always claims success) but the three `raises` tests FAIL with `DID NOT RAISE`.
 
-- [ ] **Step 3: Rewrite `menu_tool`**
+- [x] **Step 3: Rewrite `menu_tool`**
 
 In `src/agent/tools/service.py`, replace the `menu_tool` function (currently lines 255–261) with:
 
@@ -285,12 +285,12 @@ async def menu_tool(index: int, labels: list[str], session: Browser = None):
     return f"Selected {', '.join(result.get('selected', []))} in element at label {index}"
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_menu_tool.py -v`
 Expected: all 8 tests PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/test_menu_tool.py src/agent/tools/service.py docs/superpowers/plans/2026-07-04-dropdown-select-tool.md
