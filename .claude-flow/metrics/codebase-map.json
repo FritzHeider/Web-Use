@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-07-01T04:54:10.026Z",
+  "projectRoot": "/Users/drop/Web-Use",
+  "structure": {
+    "hasPackageJson": false,
+    "hasTsConfig": false,
+    "hasClaudeConfig": true,
+    "hasClaudeFlow": true
+  },
+  "scannedAt": 1782881650026
+}
