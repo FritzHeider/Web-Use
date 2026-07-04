@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **For ralph-orchestrator:** Each loop iteration: (1) read this file, (2) find the first unchecked `- [ ]` step, (3) execute that step exactly as written, (4) mark it `- [x]` and save this file, (5) if the step is a Commit step, include this plan file in the commit. **Stop condition:** every checkbox is `- [x]` AND `uv run pytest tests/ -v` passes. Never skip ahead; never re-do checked steps. If a test that should fail passes (or vice versa), stop and record the discrepancy under a `## Blockers` heading at the bottom of this file instead of improvising.
+> **For ralph-orchestrator:** Each loop iteration: (1) read this file, (2) find the first unchecked `- [ ]` step, (3) execute that step exactly as written, (4) mark it `- [x]` and save this file, (5) if the step is a Commit step, include this plan file in the commit. **Stop condition:** every checkbox is `- [x]` AND `uv run pytest tests/ -v` passes — when (and only when) both hold, output the completion promise `LOOP_COMPLETE`. Never skip ahead; never re-do checked steps. If a test that should fail passes (or vice versa), stop and record the discrepancy under a `## Blockers` heading at the bottom of this file instead of improvising.
 
 **Goal:** Register the existing `menu_tool` with the agent and make dropdown selection report real success/failure so the agent can self-correct.
 
