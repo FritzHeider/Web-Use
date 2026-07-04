@@ -113,7 +113,7 @@ git commit -m "feat: register menu_tool so the agent can select dropdown options
   - `{'selected': list[str], 'notFound': list[str], 'available': list[str]}`
   Task 3's `menu_tool` consumes exactly these shapes.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `tests/test_menu_tool.py`:
 
@@ -150,12 +150,12 @@ def test_select_option_script_handles_error_shapes():
 
 Note: `Browser.__new__(Browser)` skips `__init__` on purpose — `select_option` touches nothing on `self` except `execute_script`, which the stub replaces.
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/test_menu_tool.py -v`
 Expected: `test_menu_tool_registered` and `test_select_option_embeds_labels_via_json_dumps` PASS (the current implementation already uses `json.dumps` — that test pins the existing safe behavior). `test_select_option_returns_structured_result` FAILS (current method returns `None`) and `test_select_option_script_handles_error_shapes` FAILS (current script has no error markers).
 
-- [ ] **Step 3: Rewrite `select_option`**
+- [x] **Step 3: Rewrite `select_option`**
 
 In `src/agent/browser/service.py`, replace the entire `select_option` method (currently lines 937–951) with:
 
@@ -188,12 +188,12 @@ In `src/agent/browser/service.py`, replace the entire `select_option` method (cu
 
 Semantics locked by the spec: single-select uses the first *requested label* that matched (`selected[0]`); multi-select selects every matching option and deselects options not in `labels`; `input` and `change` both bubble; events fire only when something matched.
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/test_menu_tool.py -v`
 Expected: all 4 tests PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add tests/test_menu_tool.py src/agent/browser/service.py docs/superpowers/plans/2026-07-04-dropdown-select-tool.md
