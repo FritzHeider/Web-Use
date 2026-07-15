@@ -26,9 +26,10 @@ The driver shows the public `Browser` API for ad-hoc probes: `navigate(url)`, `e
 
 ```bash
 uv run python src/cli.py --query "<task description>" [--headless] [--steps N]
+uv run python src/cli.py --file <path/to/masterprompt.txt> [--headless] [--steps N]
 ```
 
-- `--query` (required): natural-language task for the agent
+- `--query` | `--file`: exactly one required. `--file` reads the whole file as the task — use it for long/multi-line masterprompts instead of `--query "$(cat file)"`, which leaks the full prompt into the process argument list. Missing file prints `[!] Error: File '…' not found.` and exits 0 (no API call).
 - `--headless`: no visible window (default: visible)
 - `--steps`: max agent steps (default 100)
 
