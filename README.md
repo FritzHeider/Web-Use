@@ -214,6 +214,26 @@ uv run main.py
 
 ---
 
+## 🧩 Use as a Claude skill
+
+Web-Use ships as a drop-in [Claude Code](https://claude.com/claude-code) skill at `.agents/skills/web-use/`. Copy it into your skills directory:
+
+```bash
+cp -R .agents/skills/web-use ~/.claude/skills/
+```
+
+Then invoke it with `/web-use`, or just describe a multi-step browsing task and it auto-matches. The skill bootstraps its own install (clone → `uv sync` → `.env`) and drives the agent via the CLI:
+
+```bash
+uv run python src/cli.py --query "<task>" [--headless] [--steps N]
+uv run python src/cli.py --file  <path/to/masterprompt.txt> [--headless] [--steps N]
+```
+
+- `--query` **or** `--file` (exactly one). Use `--file` for long/multi-line prompts.
+- `--headless`: no visible window (default: visible). `--steps`: max agent steps (default 100).
+
+---
+
 ## ⚙️ Configuration Options
 
 ### Agent Parameters
