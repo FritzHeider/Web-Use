@@ -1,32 +1,65 @@
 ---
 name: web-use
-description: Autonomous browsing agent capable of complex multi-step web navigation, form filling, and data extraction using CDP and Vision.
+description: Use when a task needs autonomous, multi-step web browsing beyond simple fetch/click — dynamic React/Vue pages, multi-page form filling or checkout, cross-site search-and-summarize, OAuth/login flows, file download/upload — and you want to delegate it to the Web-Use CDP browsing agent. Bootstraps its own install; not tied to any repo you're already in.
 ---
 
-# 🌐 Web-Use Skill
+# Web-Use (installable browsing agent)
 
-This skill allows an agent to delegate complex web browsing tasks to a specialized autonomous agent. Use this when the built-in browser tools are insufficient for highly dynamic pages, complex auth flows, or multi-step navigation.
+Web-Use is a standalone autonomous browsing agent (Chrome DevTools Protocol + vision + semantic DOM tree, multi-LLM). This skill **installs it if missing** and drives it via its CLI, so it works dropped into any Claude setup — you do not need to already be inside the Web-Use repo.
 
-## Usage
+Original project: `CursorTouch/Web-Use`. The `src/cli.py` wrapper this skill calls lives in the fork below.
 
-Invoke the browsing agent by running the CLI wrapper. It will handle the navigation and return a summary of its findings.
+## When to use
 
-### Basic Command
+- Heavy dynamic content (React/Vue/JS) needing waits and real interaction
+- Multi-page forms, checkouts, wizards
+- Search across several sites, then aggregate/summarize
+- OAuth / login flows, persistent sessions
+- Download files or upload to forms
+
+**When NOT to use:** a single static page fetch, one obvious click, or scraping one URL — a plain HTTP fetch or the host's built-in browser tool is faster. Web-Use is for *multi-step* autonomy.
+
+## Install (run once; skip if `Web-Use/` already present)
+
+Requires **Python ≥3.13** and **uv** (`curl -LsSf https://astral.sh/uv/install.sh | sh`).
+
 ```bash
-uv run src/cli.py --query "your request here"
+git clone https://github.com/FritzHeider/Web-Use.git
+cd Web-Use
+uv sync
+printf 'GOOGLE_API_KEY="<YOUR_GEMINI_KEY>"\n' > .env   # Gemini 2.5 Flash is the CLI default
 ```
 
-### Options
-- `--headless`: Run the browser without a GUI (faster, but may fail on some interactive checks).
-- `--steps <N>`: Maximum number of steps to allow the agent (default: 100).
+Other providers (Anthropic, OpenAI, Groq, Ollama, …) ship in deps but the CLI hardcodes Gemini; swap the provider in `src/cli.py` (`ChatGoogle`) to change it.
 
-## When to use this skill
-- **Dynamic Content**: Pages with heavy React/Vue/JS that require waiting or complex interactions.
-- **Form Filling**: Multi-page forms or complex checkouts.
-- **Search & Aggregate**: Finding information across multiple sites and summarizing it.
-- **OAuth/Auth**: Situations requiring complex login flows or persistent sessions.
+## Run (from the repo root)
 
-## Example
 ```bash
-uv run src/cli.py --query "Find the top 3 trending AI papers on arXiv from the last week and summarize their abstracts."
+uv run python src/cli.py --query "<task>" [--headless] [--steps N]
+uv run python src/cli.py --file  <path/to/masterprompt.txt> [--headless] [--steps N]
 ```
+
+- `--query` **or** `--file` (exactly one). Use `--file` for long/multi-line prompts so the full text doesn't leak into the process arg list.
+- `--headless`: no visible window (default: visible). `--steps`: max agent steps (default 100).
+
+Streams `[Agent] 🛠️ Tool Call:` / `📃 Tool Result:` lines, then `[+] Final Agent Response:`.
+
+### Verified example
+
+```bash
+uv run python src/cli.py --query "Go to https://example.com and tell me the exact text of the main heading" --headless --steps 8
+```
+
+## Gotchas
+
+- **Run from the repo root** — everything imports `src.*`; `cd src/` breaks imports.
+- **Always `uv run python …`** — bare `python3` misses the venv deps; and don't drop the `python` (`uv run src/cli.py` won't work).
+- **Startup stack trace** → `.env` is missing `GOOGLE_API_KEY`.
+- **`ModuleNotFoundError: No module named 'src'`** → not at repo root, or you dropped `uv run`.
+- **Safe alongside your own Chrome** — `use_system_profile` copies session files into a fresh temp profile per launch; it never locks your live browser.
+- **Port 9222** is the default CDP port; an unresponsive listener there gets killed and replaced. Don't park anything you care about on it.
+- **`main.py` is an interactive demo** (`input()`, no args) — use `src/cli.py` for parameterized/automated runs.
+
+## Distributing this skill
+
+Copy this `web-use/` folder into a target setup's skills directory (e.g. `~/.claude/skills/web-use/`). It is self-contained: the Install section bootstraps the agent on first use.
