@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pull-requests: write
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -12,11 +13,43 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Merge upstream/main and push
+      - name: Merge upstream/main, or open a PR if it conflicts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add upstream https://github.com/CursorTouch/Web-Use.git
-          git fetch upstream
-          git merge upstream/main --no-edit
-          git push origin main
+          git remote add upstream https://github.com/CursorTouch/Web-Use.git || true
+          git fetch upstream --no-tags
+
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "Already up to date with upstream/main."
+            exit 0
+          fi
+
+          # Clean merge: keep syncing straight to main as before.
+          if git merge upstream/main --no-edit; then
+            git push origin main
+            echo "Synced upstream/main cleanly."
+            exit 0
+          fi
+
+          # Conflict: never leave this silent. Publish a branch, open a PR for
+          # manual resolution, and fail the run so the scheduled-failure
+          # notification actually fires.
+          echo "::warning::Conflict merging upstream/main; opening a PR for manual resolution."
+          git merge --abort
+          BRANCH="sync/upstream-$(date -u +%Y%m%d)"
+          git checkout -B "$BRANCH" upstream/main
+          git push -f origin "$BRANCH"
+
+          gh pr create --base main --head "$BRANCH" \
+            --title "Sync upstream (manual conflict resolution needed)" \
+            --body "The scheduled upstream sync could not merge \`upstream/main\` into \`main\` automatically. Resolve the conflicts here, or merge locally.
+
+          This fork carries local changes, so conflicts are expected whenever upstream touches the same lines. If a local change has since been accepted upstream, drop the fork's copy while resolving." \
+            || gh pr list --head "$BRANCH" --json url --jq '.[0].url'
+
+          echo "::error::Upstream sync needs manual conflict resolution (branch: $BRANCH)."
+          exit 1
