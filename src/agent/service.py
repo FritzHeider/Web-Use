@@ -174,6 +174,11 @@ class Agent(BaseAgent):
                                 id=llm_event.tool_call.id,
                                 name=llm_event.tool_call.name,
                                 params=llm_event.tool_call.params,
+                                # Carry thinking + signature into history: Gemini 3.x
+                                # rejects a replayed function call whose
+                                # thought_signature is missing.
+                                thinking=llm_event.thinking.content if llm_event.thinking else None,
+                                thinking_signature=llm_event.thinking.signature if llm_event.thinking else None,
                             )
                             break
                         case LLMEventType.TEXT:

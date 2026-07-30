@@ -27,8 +27,12 @@ Requires **Python ≥3.13** and **uv** (`curl -LsSf https://astral.sh/uv/install
 git clone https://github.com/FritzHeider/Web-Use.git
 cd Web-Use
 uv sync
-printf 'GOOGLE_API_KEY="<YOUR_GEMINI_KEY>"\n' > .env   # Gemini 2.5 Flash is the CLI default
+printf 'GEMINI_API_KEY="<YOUR_GEMINI_KEY>"\n' > .env
 ```
+
+Either `GEMINI_API_KEY` or `GOOGLE_API_KEY` works — `ChatGoogle` checks them in that order.
+
+The CLI defaults to the **`gemini-flash-latest`** alias rather than a pinned id on purpose: model availability is per-key/project, so a pinned id (e.g. `gemini-2.5-flash`) can 404 for a fresh install even while appearing in ListModels.
 
 Other providers (Anthropic, OpenAI, Groq, Ollama, …) ship in deps but the CLI hardcodes Gemini; swap the provider in `src/cli.py` (`ChatGoogle`) to change it.
 
@@ -46,6 +50,8 @@ Streams `[Agent] 🛠️ Tool Call:` / `📃 Tool Result:` lines, then `[+] Fina
 
 ### Verified example
 
+Run end-to-end on 2026-07-29 (agent navigated, read the `h1`, and returned a final answer):
+
 ```bash
 uv run python src/cli.py --query "Go to https://example.com and tell me the exact text of the main heading" --headless --steps 8
 ```
@@ -54,7 +60,8 @@ uv run python src/cli.py --query "Go to https://example.com and tell me the exac
 
 - **Run from the repo root** — everything imports `src.*`; `cd src/` breaks imports.
 - **Always `uv run python …`** — bare `python3` misses the venv deps; and don't drop the `python` (`uv run src/cli.py` won't work).
-- **Startup stack trace** → `.env` is missing `GOOGLE_API_KEY`.
+- **Startup stack trace** → `.env` is missing `GEMINI_API_KEY` / `GOOGLE_API_KEY`.
+- **`404 ... is no longer available to new users`** → the configured model was retired for your key. Prefer the `gemini-flash-latest` alias over a pinned id. Note a model can be listed by ListModels and still 404 on `generateContent`, so probe with a real call before pinning.
 - **`ModuleNotFoundError: No module named 'src'`** → not at repo root, or you dropped `uv run`.
 - **Safe alongside your own Chrome** — `use_system_profile` copies session files into a fresh temp profile per launch; it never locks your live browser.
 - **Port 9222** is the default CDP port; an unresponsive listener there gets killed and replaced. Don't park anything you care about on it.

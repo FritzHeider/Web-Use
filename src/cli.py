@@ -25,8 +25,10 @@ async def main():
 
     load_dotenv()
 
-    # Initialize the LLM (using Gemini as the default provider in this environment)
-    llm = ChatGoogle(model='gemini-2.5-flash')
+    # Initialize the LLM (using Gemini as the default provider in this environment).
+    # Use the floating alias, not a pinned version: model availability is
+    # per-key/project, so a pinned id can 404 for a fresh install.
+    llm = ChatGoogle(model='gemini-flash-latest')
     
     # Configure the browser
     config = BrowserConfig(
