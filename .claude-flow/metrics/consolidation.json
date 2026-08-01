@@ -1,6 +1,16 @@
 {
-  "timestamp": "2026-07-01T04:52:09.650Z",
+  "timestamp": "2026-07-16T04:51:18.994Z",
+  "distillationEnabled": true,
   "patternsConsolidated": 0,
   "memoryCleaned": 0,
-  "duplicatesRemoved": 0
+  "duplicatesRemoved": 0,
+  "episodes": 0,
+  "patternEmbeddings": 0,
+  "causalEdges": 0,
+  "promoted": 0,
+  "byProvenance": {},
+  "namespaces": [],
+  "dryRun": false,
+  "corrupt": false,
+  "skipped": "error: Could not locate the bindings file. Tried:\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/build/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/build/Debug/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/build/Release/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/out/Debug/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/Debug/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/out/Release/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/Release/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/build/default/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/compiled/26.4.0/darwin/arm64/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/addon-build/release/install-root/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/addon-build/debug/install-root/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/addon-build/default/install-root/better_sqlite3.node\n → /Users/drop/.npm/_npx/85fb20e3e7e3a233/node_modules/better-sqlite3/lib/binding/node-v147-darwin-arm64/better_sqlite3.node"
 }

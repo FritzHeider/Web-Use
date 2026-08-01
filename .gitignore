@@ -174,3 +174,7 @@ uv.lock
 
 test.py
 notebook.ipynb
+# Runtime artifacts (claude-flow / swarm)
+.swarm/*.db-shm
+.swarm/*.db-wal
+.claude-flow/daemon.pid

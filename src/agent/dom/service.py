@@ -165,7 +165,17 @@ class DOM:
                         _CHECK_COVERAGE_JS.replace('ELEMENTS', json.dumps(payload))
                     )
                     if isinstance(visible, list) and len(visible) == len(interactive):
-                        interactive = [n for n, v in zip(interactive, visible) if v]
+                        kept = [n for n, v in zip(interactive, visible) if v]
+                        dropped = [n for n, v in zip(interactive, visible) if not v]
+                        # The [#N] labels rendered in the semantic tree must match
+                        # positions in this list — get_element_by_index and
+                        # selector_map both look elements up positionally.
+                        for pos, node in enumerate(kept):
+                            node.interactive_id = pos
+                        for node in dropped:
+                            node.interactive_id = None
+                            node.element_type = 'structural'
+                        interactive = kept
                 except Exception:
                     pass  # keep all if JS fails
 
